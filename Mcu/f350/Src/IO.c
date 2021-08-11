@@ -224,7 +224,7 @@ void detectInput(){
 
 		//if(((dma_buffer[j] - lastnumber) >1000 ) && ((dma_buffer[j] - lastnumber) < 2010)){ // blank space
 
-			//if(bi_direction){
+			//if(settings.hardware.bidir){
 				//if(dma_buffer[j] - lastnumber <= servo_neutral){
 				//servorawinput = map((dma_buffer[j] - lastnumber), servo_low_threshold, servo_neutral, 0, 1000);
 				//}else{

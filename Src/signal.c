@@ -35,7 +35,7 @@ void computeServoInput(){
 
 		if(((dma_buffer[1] - dma_buffer[0]) >900 ) && ((dma_buffer[1] - dma_buffer[0]) < 2150)){
 
-			if(bi_direction){
+			if(settings.hardware.bidir){
 				if(dma_buffer[1] - dma_buffer[0] <= servo_neutral){
 				servorawinput = map((dma_buffer[1] - dma_buffer[0]), servo_low_threshold, servo_neutral, 0, 1000);
 				}else{

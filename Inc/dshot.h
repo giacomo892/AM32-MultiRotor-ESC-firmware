@@ -6,6 +6,7 @@
  */
 
 #include "main.h"
+#include "eeprom.h"
 
 #ifndef INC_DSHOT_H_
 #define INC_DSHOT_H_
@@ -32,8 +33,6 @@ extern int dshotcommand;
 extern char armed;
 extern int signaltimeout;
 extern int dshot_goodcounts;
-extern char dir_reversed;
-extern char bi_direction;
 extern int zero_input_count;
 extern int forward;
 extern char buffer_divider;

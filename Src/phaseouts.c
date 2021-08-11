@@ -6,9 +6,9 @@
  */
 #include "phaseouts.h"
 #include "targets.h"
+#include "eeprom_common.h"
 
 
-extern char comp_pwm;
 extern char prop_brake_active;
 
 #ifndef PWM_ENABLE_BRIDGE
@@ -53,7 +53,7 @@ void proportionalBrake(){  // alternate all channels between braking (ABC LOW) a
 
 
 void phaseBPWM() {
-		if(!comp_pwm){            // for future
+		if(!settings.hardware.complementary_pwm){            // for future
 		LL_GPIO_SetPinMode(PHASE_B_GPIO_PORT_LOW, PHASE_B_GPIO_LOW, LL_GPIO_MODE_OUTPUT);
 		PHASE_B_GPIO_PORT_LOW->LOW_BITREG_OFF = PHASE_B_GPIO_LOW;
 		}else{
@@ -85,7 +85,7 @@ void phaseBLOW() {
 
 
 void phaseCPWM() {
-	if (!comp_pwm){
+	if (!settings.hardware.complementary_pwm){
 			LL_GPIO_SetPinMode(PHASE_C_GPIO_PORT_LOW, PHASE_C_GPIO_LOW, LL_GPIO_MODE_OUTPUT);
 			PHASE_C_GPIO_PORT_LOW->LOW_BITREG_OFF = PHASE_C_GPIO_LOW;
 		}else{
@@ -118,7 +118,7 @@ void phaseCLOW() {
 ///////////////////////////////////////////////PHASE 3 /////////////////////////////////////////////////
 
 void phaseAPWM() {
-		if (!comp_pwm){
+		if (!settings.hardware.complementary_pwm){
 			LL_GPIO_SetPinMode(PHASE_A_GPIO_PORT_LOW, PHASE_A_GPIO_LOW, LL_GPIO_MODE_OUTPUT);
 			PHASE_A_GPIO_PORT_LOW->LOW_BITREG_OFF = PHASE_A_GPIO_LOW;
 			}else{
@@ -145,7 +145,7 @@ void phaseALOW() {
 
 //////////////////////////////////PHASE 1//////////////////////
 void phaseBPWM() {
-		if(!comp_pwm){            // for future
+		if(!settings.hardware.complementary_pwm){            // for future
 		//LL_GPIO_SetPinMode(PHASE_B_GPIO_PORT_LOW, PHASE_B_GPIO_LOW, LL_GPIO_MODE_OUTPUT);
 		//PHASE_B_GPIO_PORT_LOW->LOW_BITREG_OFF = PHASE_B_GPIO_LOW;
 		}else{
@@ -179,7 +179,7 @@ void phaseBLOW() {
 
 
 void phaseCPWM() {
-	if (!comp_pwm){
+	if (!settings.hardware.complementary_pwm){
 		//	LL_GPIO_SetPinMode(PHASE_C_GPIO_PORT_LOW, PHASE_C_GPIO_LOW, LL_GPIO_MODE_OUTPUT);
 			//PHASE_C_GPIO_PORT_LOW->LOW_BITREG_OFF = PHASE_C_GPIO_LOW;
 		}else{
@@ -213,7 +213,7 @@ void phaseCLOW() {
 ///////////////////////////////////////////////PHASE 3 /////////////////////////////////////////////////
 
 void phaseAPWM() {
-		if (!comp_pwm){
+		if (!settings.hardware.complementary_pwm){
 		//	LL_GPIO_SetPinMode(PHASE_A_GPIO_PORT_LOW, PHASE_A_GPIO_LOW, LL_GPIO_MODE_OUTPUT);
 			//PHASE_A_GPIO_PORT_LOW->LOW_BITREG_OFF = PHASE_A_GPIO_LOW;
 			}else{

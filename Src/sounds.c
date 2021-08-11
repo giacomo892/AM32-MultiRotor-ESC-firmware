@@ -77,7 +77,9 @@ void playBlueJayTune(){
 	uint16_t duration;
 	uint16_t frequency;
 	comStep(3);
-	read_flash_bin(blueJayTuneBuffer , EEPROM_START_ADD + 48 , 128);
+
+	//read_flash_bin(blueJayTuneBuffer , EEPROM_START_ADD + 48 , 128);
+
 	for(int i = 4 ; i < 128 ; i+=2){
 		LL_IWDG_ReloadCounter(IWDG);
 		signaltimeout = 0;

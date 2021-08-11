@@ -136,35 +136,35 @@ dshot_frametime = dma_buffer[31]- dma_buffer[0];
 						playBeaconTune3();
 					break;
 					case 7:
-						dir_reversed = 0;
-						forward = 1 - dir_reversed;
+						settings.common.reversed = 0;
+						forward = 1 - settings.common.reversed;
 						play_tone_flag = 1;
 				    break;
 				    case 8:
-				    	dir_reversed = 1;
-				    	forward = 1 - dir_reversed;
+				    	settings.common.reversed = 1;
+				    	forward = 1 - settings.common.reversed;
 				    	play_tone_flag = 2;
 				    break;
 					case 9:
-						bi_direction = 0;
+						settings.hardware.bidir = 0;
    					    armed = 0;
 						zero_input_count = 0;
 				    break;
 					case 10:
-						bi_direction = 1;
+						settings.hardware.bidir = 1;
 						zero_input_count = 0;
 						armed = 0;
 				    break;
 					case 12:
-					saveEEpromSettings();
+					saveParameters();
 					//delayMillis(100);
 				//	NVIC_SystemReset();
 				    break;
 					case 20:
-						forward = 1 - dir_reversed;
+						forward = 1 - settings.common.reversed;
 					break;
 					case 21:
-						forward = dir_reversed;
+						forward = settings.common.reversed;
 					break;
 
 					}

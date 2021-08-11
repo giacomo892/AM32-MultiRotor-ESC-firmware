@@ -20,11 +20,11 @@ uint32_t FLASH_FKEY2 =0xCDEF89AB;
 
 
 
-void save_flash_nolib(uint8_t *data, int length, uint32_t add){
+void save_flash_nolib(eeprom_t *data, int length, uint32_t add){
 	uint16_t data_to_FLASH[length / 2];
 	memset(data_to_FLASH, 0, length / 2);
 	for(int i = 0; i < length / 2 ; i ++ ){
-		data_to_FLASH[i] =  data[i*2+1] << 8 | data[i*2];   // make 16 bit
+		data_to_FLASH[i] =  ((uint8_t*)data)[i*2+1] << 8 | ((uint8_t*)data)[i*2];   // make 16 bit
 	}
 	volatile uint32_t data_length = length / 2;
 
@@ -82,12 +82,9 @@ void save_flash_nolib(uint8_t *data, int length, uint32_t add){
 
 
 
-void read_flash_bin(uint8_t*  data , uint32_t add , int out_buff_len){
+void read_flash_bin(eeprom_t*  data , uint32_t add , int out_buff_len){
 	//volatile uint32_t read_data;
 	for (int i = 0; i < out_buff_len ; i ++){
-		data[i] = *(uint8_t*)(add + i);
+		*((uint8_t *)data + i) = *(uint8_t*)(add + i);
 	}
 }
-
-
-
