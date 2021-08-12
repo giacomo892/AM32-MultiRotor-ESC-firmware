@@ -13,13 +13,15 @@ eeprom_t settings;
 bool loadParameters()
 {
 
-    read_flash_bin(&settings, EEPROM_START_ADD, sizeof(settings));
+    read_flash_bin(&settings, EEPROM_START_ADDRESS);
 
     //check crc field
     //if crc fails reset the parameters and load safe defaults and prevent arming
     //update firmware name and version
 
     //if (crc fail) restoreDefaultParameters();
+
+    return true; // XXX
 }
 
 bool saveParameters() //it's a bool, so better to check the returned value
@@ -27,7 +29,9 @@ bool saveParameters() //it's a bool, so better to check the returned value
 
     //update crc
 
-    save_flash_nolib(&settings, sizeof(settings), EEPROM_START_ADD);
+    save_flash_nolib(&settings, EEPROM_START_ADDRESS);
+
+    return true; // XXX
 }
 
 bool restoreDefaultParameters()
@@ -50,6 +54,8 @@ bool restoreDefaultParameters()
     //other settings are ok to be zero or they are defaulted (constrained in other parts of the code
 
     //update crc and then save to eeprom
+
+    return true; // XXX
 }
 
 uint16_t calculate_crc16(eeprom_t *buff)

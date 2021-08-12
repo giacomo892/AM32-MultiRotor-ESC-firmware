@@ -18,7 +18,7 @@ typedef union __attribute__((packed))
     uint16_t word;
 } uint8_16_u;
 
-typedef struct
+typedef struct __attribute__((packed))
 {
     uint8_t boot;
     uint8_t version;
@@ -28,7 +28,7 @@ typedef struct
     bool reversed;
 } common_eeprom_t;
 
-typedef struct
+typedef struct __attribute__((packed))
 {
     bool bidir;
     bool sin_startup;

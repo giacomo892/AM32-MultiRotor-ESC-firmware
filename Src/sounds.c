@@ -112,7 +112,7 @@ void playBlueJayTune(){
 void playStartupTune(){
 	__disable_irq();
 
-	uint8_t value = *(uint8_t*)(EEPROM_START_ADD+48);
+	uint8_t value = ((uint8_t*)EEPROM_START_ADDRESS)[48];
 		if(value != 0xFF){
 		playBlueJayTune();
 		}else{
