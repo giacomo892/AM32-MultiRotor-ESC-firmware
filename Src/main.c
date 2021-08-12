@@ -107,7 +107,8 @@
  *1.72 Fix telemetry output and add 1 second arming.
  *1.73 Fix false arming if no signal. Remove low rpm throttle protection below 300kv
  *1.74 Add Sine Mode range and drake brake strength adjustment
- */
+ *1.80 New EEPROM code and various fixes
+*/
 #include <stdint.h>
 #include <string.h>
 #include "main.h"
@@ -430,6 +431,7 @@ LL_GPIO_SetPinPull(INPUT_PIN_PORT, INPUT_PIN, LL_GPIO_PULL_NO);
 
 
 void convertAndCheckEEpromSettings(){
+	bool something_changed = false;
 
 	//conversions
 	motor_kv = (settings.hardware.motor_kv_compact * 40) + 20;
@@ -447,8 +449,8 @@ void convertAndCheckEEpromSettings(){
 		advance_level = settings.hardware.timing_advance_compact;
 	}
 
-	servo_low_threshold = settings.hardware.servo_low_value_compact*2 + 750;
-	servo_high_threshold = settings.hardware.servo_high_value_compact*2 + 750;
+	servo_low_threshold = settings.hardware.servo_low_value_compact * 2 + 750;
+	servo_high_threshold = settings.hardware.servo_high_value_compact * 2 + 750;
 	servo_neutral = settings.hardware.servo_neutral_base_compact + 1374;
     servo_dead_band = settings.hardware.servo_deadband;
 
@@ -467,7 +469,7 @@ void convertAndCheckEEpromSettings(){
 	}
 
 	if(settings.hardware.pwm_frequency_multiplier_compact > 23 && settings.hardware.pwm_frequency_multiplier_compact < 49) {
-		TIMER1_MAX_ARR = map (settings.hardware.pwm_frequency_multiplier_compact, 24, 48, TIM1_AUTORELOAD ,TIM1_AUTORELOAD/2);
+		TIMER1_MAX_ARR = map(settings.hardware.pwm_frequency_multiplier_compact, 24, 48, TIM1_AUTORELOAD ,TIM1_AUTORELOAD/2);
 		TIM1->ARR = TIMER1_MAX_ARR;
 	}else{
 		tim1_arr = TIM1_AUTORELOAD;
@@ -476,16 +478,27 @@ void convertAndCheckEEpromSettings(){
 
 	//checks
     if(!(settings.hardware.sine_mode_changeover_thottle_level > 4 && settings.hardware.sine_mode_changeover_thottle_level< 26)){            // sine mode changeover 5-25 percent throttle
-     	settings.hardware.sine_mode_changeover_thottle_level = 5; //remember to save it
+     	settings.hardware.sine_mode_changeover_thottle_level = 5;
+		something_changed = true;
 	   }
     if(!(settings.hardware.drag_brake_strength > 4 && settings.hardware.drag_brake_strength< 11)){            // sine mode changeover 5-25 percent throttle
-     	settings.hardware.drag_brake_strength = 10; //remember to save it
+     	settings.hardware.drag_brake_strength = 10;
+		something_changed = true;
 	   }
 	if(!settings.hardware.complementary_pwm){
 		settings.hardware.bidir = 0;
-		saveParameters();
+		something_changed = true;
 	}
 
+	if(firmware_info.version_major != settings.common.major_version || firmware_info.version_minor != settings.common.minor_version ){
+	   settings.common.major_version = firmware_info.version_major;
+	   settings.common.minor_version = firmware_info.version_minor;
+       memcpy(settings.common.firmware_name, firmware_info.device_name, sizeof(settings.common.major_version));
+	   something_changed = true;
+  	}
+
+
+	if(something_changed) saveParameters();
 
 }
 
@@ -1068,16 +1081,7 @@ int main(void)
 
  loadParameters();
 
-
- convertAndCheckEEpromSettings(); //new function in order to convert and do sanity check
-
-  if(firmware_info.version_major != settings.common.major_version || firmware_info.version_minor != settings.common.minor_version ){
-	  settings.common.major_version = firmware_info.version_major;
-	  settings.common.minor_version = firmware_info.version_minor;
-      memcpy(settings.common.firmware_name, firmware_info.device_name, sizeof(settings.common.major_version));
-
-	  saveParameters();
-  }
+ convertAndCheckEEpromSettings(); //new function in order to convert and do sanity checks
 
   if(settings.hardware.sin_startup){
   min_startup_duty = sin_mode_min_s_d;

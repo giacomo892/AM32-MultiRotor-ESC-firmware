@@ -60,7 +60,7 @@ typedef struct __attribute__((packed))
 {
     common_eeprom_t common;
     hardware_specific_eeprom_t hardware;
-    uint16_t crc16;
+    //uint16_t crc16;
 } eeprom_t;
 
 bool loadParameters();
