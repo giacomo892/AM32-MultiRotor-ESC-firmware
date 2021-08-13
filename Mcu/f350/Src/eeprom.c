@@ -12,6 +12,9 @@
 //#define FLASH_STORAGE 0x08005000  // at the 31kb mark
 //#define PAGE_SIZE 0x800           // 1 kb for f051
 
+uint32_t FLASH_FKEY1 = 0x45670123;
+uint32_t FLASH_FKEY2 = 0xCDEF89AB;
+
 void save_flash_nolib(eeprom_t *data, void *eeprom_address)
 {
     // unlock flash
@@ -32,7 +35,11 @@ void save_flash_nolib(eeprom_t *data, void *eeprom_address)
     }
     FLASH->CR &= ~FLASH_CR_PER;
 
-    uint16_t *data_ptr = (uint16_t *)data;
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Waddress-of-packed-member"
+    volatile uint16_t *data_ptr = (uint16_t *)data;
+    #pragma GCC diagnostic pop
+
     uint16_t *data_ptr_end = (uint16_t *)((uint8_t *)data + sizeof(*data));
     uint16_t *flash_ptr = (uint16_t *)eeprom_address;
 

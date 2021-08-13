@@ -37,7 +37,7 @@ void save_flash_nolib(eeprom_t *data, void *eeprom_address)
 
     #pragma GCC diagnostic push
     #pragma GCC diagnostic ignored "-Waddress-of-packed-member"
-    uint16_t *data_ptr = (uint16_t *)data;
+    volatile uint16_t *data_ptr = (uint16_t *)data;
     #pragma GCC diagnostic pop
 
     uint16_t *data_ptr_end = (uint16_t *)((uint8_t *)data + sizeof(*data));
