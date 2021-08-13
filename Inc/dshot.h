@@ -31,7 +31,7 @@ extern char dshot_telemetry;
 extern int dshot_badcounts;
 extern int dshotcommand;
 extern char armed;
-extern int signaltimeout;
+extern uint16_t input_signal_missing;
 extern int dshot_goodcounts;
 extern int zero_input_count;
 extern int forward;

@@ -271,7 +271,7 @@ void detectInput(){
 
 	//if (inputSet == 1){
 	//if(!armed){
-		//signaltimeout = 0;
+		//input_signal_missing = 0;
 		//if (input < 0){
 			  						//input = 0;
 			  					//}
@@ -312,7 +312,7 @@ void detectInput(){
 		//if  (servoPwm == 1){
 			//computeServoInput();
 			//IC_TIMER_REGISTER->CNT = 0;
-			//signaltimeout = 0;
+			//input_signal_missing = 0;
 			//receiveDshotDma();
 		//}
 

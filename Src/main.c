@@ -405,7 +405,7 @@ int floating =2;
 int lowside = 3;
 int sensorless = 1;
 uint32_t waitTime = 0;
-int signaltimeout = 0;
+uint16_t input_signal_missing = 0;
 
 uint8_t ubAnalogWatchdogStatus = RESET;
 
@@ -457,8 +457,6 @@ void convertAndCheckEEpromSettings(){
 
 	low_cell_volt_cutoff = settings.hardware.low_voltage_cut_off_threshold_compact + 250; // 2.5 to 3.5 volts per cell rang check default to be 330
 
-	setVolume(settings.hardware.beep_volume);
-
 	if(settings.hardware.startup_power_compact < 151 && settings.hardware.startup_power_compact > 49){
 		min_startup_duty = settings.hardware.startup_power_compact/ 2 + 10 + startup_boost;
 		min_startup_duty_default = settings.hardware.startup_power_compact/ 2 + 10 + startup_boost;
@@ -475,6 +473,8 @@ void convertAndCheckEEpromSettings(){
 		tim1_arr = TIM1_AUTORELOAD;
 		TIM1->ARR = tim1_arr;
 	}
+
+	setVolume(settings.hardware.beep_volume);
 
 	//checks
     if(!(settings.hardware.sine_mode_changeover_thottle_level > 4 && settings.hardware.sine_mode_changeover_thottle_level< 26)){            // sine mode changeover 5-25 percent throttle
@@ -899,42 +899,32 @@ if(desync_check && zero_crosses > 10){
 		NVIC_SetPriority(ADC1_COMP_IRQn, 0);
 	}
 
-		signaltimeout++;
-		if(signaltimeout > 2500) { // quarter second timeout when armed;
-			if(armed){
-				allOff();
-				armed = 0;
-				input = 0;
-				inputSet = 0;
-				zero_input_count = 0;
-				TIM1->CCR1 = 0;
-			    TIM1->CCR2 = 0;
-				TIM1->CCR3 = 0;
-				IC_TIMER_REGISTER->PSC = 0;
-				IC_TIMER_REGISTER->CNT = 0;
-				for(int i = 0; i < 64; i++){
-					dma_buffer[i] = 0;
-				}
-				NVIC_SystemReset();
-			}
+	input_signal_missing++;
 
-		if (signaltimeout > 25000){     // 1.5 second
-			allOff();
-			armed = 0;
-			input = 0;
-			inputSet = 0;
-			zero_input_count = 0;
-			TIM1->CCR1 = 0;
-		    TIM1->CCR2 = 0;
-			TIM1->CCR3 = 0;
-			IC_TIMER_REGISTER->PSC = 0;
-			IC_TIMER_REGISTER->CNT = 0;
-			for(int i = 0; i < 64; i++){
-				dma_buffer[i] = 0;
-			}
-			NVIC_SystemReset();
-		}
-			}
+	uint16_t input_signal_timeout;
+
+	if(armed){
+		input_signal_timeout = 2500; //0.25 seconds
+	}
+	else
+	{
+		input_signal_timeout = 15000; //1.5 seconds
+	}
+
+	if(input_signal_missing > input_signal_timeout) {
+		allOff();
+		armed = 0;
+		input = 0;
+		inputSet = 0;
+		zero_input_count = 0;
+		TIM1->CCR1 = 0;
+		TIM1->CCR2 = 0;
+		TIM1->CCR3 = 0;
+		IC_TIMER_REGISTER->PSC = 0;
+		IC_TIMER_REGISTER->CNT = 0;
+		memset(&dma_buffer, 0, sizeof(dma_buffer));
+		NVIC_SystemReset();
+	}
 }
 
 
@@ -1192,7 +1182,7 @@ LL_IWDG_ReloadCounter(IWDG);
 
 #ifdef USE_ADC_INPUT
 
-signaltimeout = 0;
+input_signal_missing = 0;
 ADC_smoothed_input = (((10*ADC_smoothed_input) + ADC_raw_input)/11);
 newinput = ADC_smoothed_input / 2;
 if(newinput > 2000){

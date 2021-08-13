@@ -44,7 +44,7 @@ void computeServoInput(){
 			}else{
 			servorawinput = map((dma_buffer[1] - dma_buffer[0]), servo_low_threshold, servo_high_threshold, 0, 2000);
 			}
-			signaltimeout = 0;
+			input_signal_missing = 0;
 
 		}else{
 			zero_input_count = 0;      // reset if out of range

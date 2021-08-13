@@ -89,7 +89,7 @@ dshot_frametime = dma_buffer[31]- dma_buffer[0];
 						| dpulse[8]<<2 | dpulse[9]<<1 | dpulse[10]);
 
 				if(calcCRC == checkCRC){
-					signaltimeout = 0;
+					input_signal_missing = 0;
 					dshot_goodcounts++;
 					if(dpulse[11]==1){
                     send_telemetry=1;

@@ -1,5 +1,4 @@
 /*
- * eeprom_common.h
  *
  *  Created on: Aug. 8, 2021
  *      Author: giacomo892
@@ -22,6 +21,7 @@ typedef struct __attribute__((packed))
 {
     uint8_t boot;
     uint8_t version;
+    uint8_t bl_version;
     uint8_t major_version;
     uint8_t minor_version;
     char firmware_name[12];

@@ -11,7 +11,7 @@
 #include "eeprom.h"
 #include "targets.h"
 
-extern int signaltimeout;
+extern int input_signal_missing;
 extern char play_tone_flag;
 uint8_t beep_volume;
 
@@ -78,11 +78,12 @@ void playBlueJayTune(){
 	uint16_t frequency;
 	comStep(3);
 
+	//FIX ME
 	//read_flash_bin(blueJayTuneBuffer , EEPROM_START_ADD + 48 , 128);
 
 	for(int i = 4 ; i < 128 ; i+=2){
 		LL_IWDG_ReloadCounter(IWDG);
-		signaltimeout = 0;
+		input_signal_missing = 0;
 
 		if(blueJayTuneBuffer[i] == 255){
 			full_time_count++;
@@ -105,7 +106,7 @@ void playBlueJayTune(){
 	allOff();                // turn all channels low again
 	TIM1->PSC = 0;           // set prescaler back to 0.
 	TIM1->ARR = TIM1_AUTORELOAD;
-	signaltimeout = 0;
+	input_signal_missing = 0;
 	LL_IWDG_ReloadCounter(IWDG);
 }
 
@@ -132,7 +133,7 @@ void playStartupTune(){
 	delayMillis(200);
 	allOff();                // turn all channels low again
 	TIM1->PSC = 0;           // set prescaler back to 0.
-	signaltimeout = 0;
+	input_signal_missing = 0;
 	}
 	__enable_irq();
 }
@@ -148,7 +149,7 @@ void playBrushedStartupTune(){
 	delayMillis(300);
 	allOff();                // turn all channels low again
 	TIM1->PSC = 0;           // set prescaler back to 0.
-	signaltimeout = 0;
+	input_signal_missing = 0;
 	__enable_irq();
 }
 
@@ -191,7 +192,7 @@ void playInputTune2(){
 	delayMillis(75);
 	allOff();
 	TIM1->PSC = 0;
-	signaltimeout = 0;
+	input_signal_missing = 0;
 	__enable_irq();
 }
 
@@ -211,7 +212,7 @@ void playInputTune(){
 	delayMillis(100);
 	allOff();
 	TIM1->PSC = 0;
-	signaltimeout = 0;
+	input_signal_missing = 0;
 	__enable_irq();
 }
 
@@ -225,7 +226,7 @@ void playDefaultTone(){
 	delayMillis(100);
 	allOff();
 	TIM1->PSC = 0;
-	signaltimeout = 0;
+	input_signal_missing = 0;
 
 }
 
@@ -239,7 +240,7 @@ void playChangedTone(){
 	delayMillis(100);
 	allOff();
 	TIM1->PSC = 0;
-	signaltimeout = 0;
+	input_signal_missing = 0;
 
 }
 
@@ -256,6 +257,6 @@ void playBeaconTune3(){
 	}
 	allOff();
 	TIM1->PSC = 0;
-	signaltimeout = 0;
+	input_signal_missing = 0;
 	__enable_irq();
 }

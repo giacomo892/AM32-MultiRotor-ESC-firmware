@@ -1,5 +1,4 @@
 /*
- * eeprom_common.c
  *
  *  Created on: Aug. 8, 2021
  *      Author: giacomo892
@@ -15,6 +14,8 @@ bool loadParameters()
 
     read_flash_bin(&settings, EEPROM_START_ADDRESS);
 
+    //TO-DO
+    //manage CRC when the configurator changes settings
     //check crc field
     //if crc fails reset the parameters and load safe defaults and prevent arming
     //update firmware name and version
@@ -27,10 +28,9 @@ bool loadParameters()
 bool saveParameters() //it's a bool, so better to check the returned value
 {
 
-    //update crc
-
     save_flash_nolib(&settings, EEPROM_START_ADDRESS);
-
+    //TO-DO
+    //update crc and then save to eeprom, manage CRC when the configurator changes settings
     return true; // XXX
 }
 
@@ -53,7 +53,7 @@ bool restoreDefaultParameters()
 
     //other settings are ok to be zero or they are defaulted (constrained in other parts of the code
 
-    //update crc and then save to eeprom
+    saveParameters();
 
     return true; // XXX
 }
